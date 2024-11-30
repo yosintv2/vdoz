@@ -1,4 +1,4 @@
-// Function to convert video URLs into direct playable formats
+// Function to convert video URLs into embeddable or direct formats
 function getVideoUrl(url) {
     try {
         const urlObj = new URL(url);
@@ -21,9 +21,9 @@ function getVideoUrl(url) {
             return `https://www.dailymotion.com/video/${videoId}`;
         }
 
-        // Handle Custom Player URLs
+        // Handle Custom Player URLs (e.g., yosintv2.github.io player)
         if (urlObj.hostname.includes('yosintv2.github.io') && urlObj.pathname.includes('plyrr.html')) {
-            return url;
+            return url; // Use the custom player URL as-is
         }
 
         // Default case: Return the original URL
@@ -34,76 +34,40 @@ function getVideoUrl(url) {
     }
 }
 
-// Function to display cricket highlights
-function displayCricketHighlights(cricket) {
+// Function to display highlights dynamically on the page
+function displayHighlights(highlights) {
     const container = document.getElementById('highlightsContainer');
-    cricket.forEach(highlight => {
-        const div = document.createElement('div');
-        div.className = 'highlight';
-        const videoUrl = getVideoUrl(highlight.video);
+    highlights.forEach(highlight => {
+        const videoUrl = getVideoUrl(highlight.video); // Get direct video URL
         if (videoUrl) {
+            const div = document.createElement('div');
+            div.className = 'highlight';
             div.innerHTML = `
-                <div class="highlight">
-                    <a href="${videoUrl}" target="_blank">
-                        <img src="${highlight.image}" alt="${highlight.matchTitle}">
-                    </a>
-                    <a href="${videoUrl}" target="_blank">
-                        <h2>${highlight.matchTitle}</h2>
-                    </a>
-                </div>
+                <a href="${videoUrl}" target="_blank">
+                    <img src="${highlight.image}" alt="${highlight.matchTitle}">
+                </a>
+                <a href="${videoUrl}" target="_blank">
+                    <h2>${highlight.matchTitle}</h2>
+                </a>
             `;
             container.appendChild(div);
+        } else {
+            console.warn('Skipping highlight with invalid video URL:', highlight);
         }
     });
 }
 
-// Function to display football highlights by league
-function displayFootballHighlights(football) {
-    for (const league in football) {
-        const leagueSection = document.createElement('div');
-        leagueSection.className = 'league-section';
-        const leagueTitle = document.createElement('h3');
-        leagueTitle.textContent = league;
-        leagueSection.appendChild(leagueTitle);
-
-        football[league].forEach(highlight => {
-            const div = document.createElement('div');
-            div.className = 'highlight';
-            const videoUrl = getVideoUrl(highlight.video);
-            if (videoUrl) {
-                div.innerHTML = `
-                    <div class="highlight">
-                        <a href="${videoUrl}" target="_blank">
-                            <img src="${highlight.image}" alt="${highlight.matchTitle}">
-                        </a>
-                        <a href="${videoUrl}" target="_blank">
-                            <h2>${highlight.matchTitle}</h2>
-                        </a>
-                    </div>
-                `;
-                leagueSection.appendChild(div);
-            }
-        });
-
-        document.getElementById('highlightsContainer').appendChild(leagueSection);
-    }
-}
-
-// Function to load highlights from JSON
+// Function to fetch and display JSON data
 function loadHighlights(jsonPath) {
     fetch(jsonPath)
         .then(response => response.json())
         .then(data => {
-            // Display Cricket Highlights
-            displayCricketHighlights(data.cricket);
-
-            // Display Football Highlights
-            displayFootballHighlights(data.football);
+            displayHighlights(data.highlights);
         })
         .catch(error => console.error('Error loading JSON:', error));
 }
 
-// Initialize the highlights
+// Initialize the highlights by providing the JSON file path
 document.addEventListener('DOMContentLoaded', () => {
-    loadHighlights('highlights.json'); // Adjust path to your JSON file if necessary
+    loadHighlights('highlights.json'); // Update the path if the JSON file is in another location
 });
