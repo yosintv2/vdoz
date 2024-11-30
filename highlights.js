@@ -1,4 +1,4 @@
-// Function to convert video URLs into direct playable formats
+// Function to convert video URLs into embeddable or direct formats
 function getVideoUrl(url) {
     try {
         const urlObj = new URL(url);
@@ -21,9 +21,9 @@ function getVideoUrl(url) {
             return `https://www.dailymotion.com/video/${videoId}`;
         }
 
-        // Handle Custom Player URLs
+        // Handle Custom Player URLs (e.g., yosintv2.github.io player)
         if (urlObj.hostname.includes('yosintv2.github.io') && urlObj.pathname.includes('plyrr.html')) {
-            return url;
+            return url; // Use the custom player URL as-is
         }
 
         // Default case: Return the original URL
@@ -34,23 +34,11 @@ function getVideoUrl(url) {
     }
 }
 
-// Function to display highlights with manual ads after every 3rd video
-function displayHighlightsWithManualAds(highlights) {
+// Function to display highlights dynamically on the page
+function displayHighlights(highlights) {
     const container = document.getElementById('highlightsContainer');
-    let videoCount = 0;
-
-    highlights.forEach((highlight, index) => {
-        // Create a new row every three videos
-        if (videoCount % 3 === 0) {
-            const row = document.createElement('div');
-            row.className = 'row';
-            container.appendChild(row);
-        }
-
-        const currentRow = container.lastChild;
-
-        // Add the video highlight
-        const videoUrl = getVideoUrl(highlight.video);
+    highlights.forEach(highlight => {
+        const videoUrl = getVideoUrl(highlight.video); // Get direct video URL
         if (videoUrl) {
             const div = document.createElement('div');
             div.className = 'highlight';
@@ -62,32 +50,11 @@ function displayHighlightsWithManualAds(highlights) {
                     <h2>${highlight.matchTitle}</h2>
                 </a>
             `;
-            currentRow.appendChild(div);
-            videoCount++;
-        }
-
-        // Manually add Google Ads after every 3 videos
-        if (videoCount % 3 === 0) {
-            addGoogleAd();
+            container.appendChild(div);
+        } else {
+            console.warn('Skipping highlight with invalid video URL:', highlight);
         }
     });
-}
-
-// Function to manually add Google Ads
-function addGoogleAd() {
-    const adDiv = document.createElement('div');
-    adDiv.className = 'ad';
-    adDiv.innerHTML = `
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-XXXXXXXXXXXX"
-             data-ad-slot="XXXXXXXXXX"
-             data-ad-format="auto"></ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-    `;
-    document.getElementById('highlightsContainer').appendChild(adDiv);
 }
 
 // Function to fetch and display JSON data
@@ -95,12 +62,12 @@ function loadHighlights(jsonPath) {
     fetch(jsonPath)
         .then(response => response.json())
         .then(data => {
-            displayHighlightsWithManualAds(data.highlights);
+            displayHighlights(data.highlights);
         })
         .catch(error => console.error('Error loading JSON:', error));
 }
 
-// Initialize the highlights with ads
+// Initialize the highlights by providing the JSON file path
 document.addEventListener('DOMContentLoaded', () => {
-    loadHighlights('highlights.json'); // Update the JSON file path if necessary
+    loadHighlights('highlights.json'); // Update the path if the JSON file is in another location
 });
