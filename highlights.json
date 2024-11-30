@@ -1,0 +1,18 @@
+{
+    "highlights": [
+        {
+            "league": "Premier League",
+            "sport": "Football",
+            "matchTitle": "Manchester United vs Liverpool",
+            "image": "manu-vs-liverpool.jpg",
+            "video": "https://www.youtube.com/embed/sample-video-1"
+        },
+        {
+            "league": "IPL",
+            "sport": "Cricket",
+            "matchTitle": "Mumbai Indians vs Chennai Super Kings",
+            "image": "mi-vs-csk.jpg",
+            "video": "https://www.youtube.com/embed/sample-video-2"
+        }
+    ]
+}
