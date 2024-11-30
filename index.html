@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sports Highlights</title>
+    <title>Match Highlights</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,10 +11,11 @@
         .highlight {
             border: 1px solid #ccc;
             margin: 10px;
-            padding: 10px;
+            padding: 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            text-align: center;
         }
         .highlight img {
             max-width: 100%;
@@ -27,26 +28,20 @@
     </style>
 </head>
 <body>
-    <h1>Sports Highlights</h1>
-    <input type="file" id="uploadJson" accept=".json">
+    <h1>Match Highlights</h1>
     <div id="highlightsContainer"></div>
 
     <script>
-        document.getElementById('uploadJson').addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const data = JSON.parse(e.target.result);
-                    displayHighlights(data.highlights);
-                };
-                reader.readAsText(file);
-            }
-        });
+        // Fetch highlights from the JSON file
+        fetch('highlights.json')
+            .then(response => response.json())
+            .then(data => {
+                displayHighlights(data.highlights);
+            })
+            .catch(error => console.error('Error loading JSON:', error));
 
         function displayHighlights(highlights) {
             const container = document.getElementById('highlightsContainer');
-            container.innerHTML = ''; // Clear previous content
             highlights.forEach(highlight => {
                 const div = document.createElement('div');
                 div.className = 'highlight';
@@ -54,7 +49,7 @@
                     <h2>${highlight.matchTitle}</h2>
                     <p>League: ${highlight.league}</p>
                     <p>Sport: ${highlight.sport}</p>
-                    <img src="${highlight.image}" alt="Match Image">
+                    <img src="${highlight.image}" alt="${highlight.matchTitle}">
                     <iframe src="${highlight.video}" frameborder="0" allowfullscreen></iframe>
                 `;
                 container.appendChild(div);
