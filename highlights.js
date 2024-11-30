@@ -1,4 +1,4 @@
-// Function to convert video URLs into embeddable or direct formats
+// Function to convert video URLs into direct playable formats
 function getVideoUrl(url) {
     try {
         const urlObj = new URL(url);
@@ -21,9 +21,9 @@ function getVideoUrl(url) {
             return `https://www.dailymotion.com/video/${videoId}`;
         }
 
-        // Handle Custom Player URLs (e.g., yosintv2.github.io player)
+        // Handle Custom Player URLs
         if (urlObj.hostname.includes('yosintv2.github.io') && urlObj.pathname.includes('plyrr.html')) {
-            return url; // Use the custom player URL as-is
+            return url;
         }
 
         // Default case: Return the original URL
@@ -34,25 +34,28 @@ function getVideoUrl(url) {
     }
 }
 
-// Function to display highlights dynamically on the page
-function displayHighlights(highlights) {
+// Function to display highlights dynamically using Bootstrap grid classes
+function displayHighlightsWithBootstrap(highlights) {
     const container = document.getElementById('highlightsContainer');
     highlights.forEach(highlight => {
-        const videoUrl = getVideoUrl(highlight.video); // Get direct video URL
+        // Create a new div for each highlight
+        const div = document.createElement('div');
+        div.className = 'col-md-4 mb-4';  // Bootstrap class for 1/3 width on medium screens
+
+        // Construct HTML for each highlight
+        const videoUrl = getVideoUrl(highlight.video);
         if (videoUrl) {
-            const div = document.createElement('div');
-            div.className = 'highlight';
             div.innerHTML = `
-                <a href="${videoUrl}" target="_blank">
-                    <img src="${highlight.image}" alt="${highlight.matchTitle}">
-                </a>
-                <a href="${videoUrl}" target="_blank">
-                    <h2>${highlight.matchTitle}</h2>
-                </a>
+                <div class="highlight">
+                    <a href="${videoUrl}" target="_blank">
+                        <img src="${highlight.image}" alt="${highlight.matchTitle}">
+                    </a>
+                    <a href="${videoUrl}" target="_blank">
+                        <h2>${highlight.matchTitle}</h2>
+                    </a>
+                </div>
             `;
             container.appendChild(div);
-        } else {
-            console.warn('Skipping highlight with invalid video URL:', highlight);
         }
     });
 }
@@ -62,12 +65,12 @@ function loadHighlights(jsonPath) {
     fetch(jsonPath)
         .then(response => response.json())
         .then(data => {
-            displayHighlights(data.highlights);
+            displayHighlightsWithBootstrap(data.highlights);
         })
         .catch(error => console.error('Error loading JSON:', error));
 }
 
-// Initialize the highlights by providing the JSON file path
+// Initialize the highlights with Bootstrap layout
 document.addEventListener('DOMContentLoaded', () => {
-    loadHighlights('highlights.json'); // Update the path if the JSON file is in another location
+    loadHighlights('highlights.json'); // Update the JSON file path if necessary
 });
