@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Match Highlights</title>
+    <title>Match Highlights with Ads</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -16,10 +16,15 @@
             margin: 20px 0;
         }
         #highlightsContainer {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            display: flex;
+            flex-direction: column;
             gap: 20px;
             padding: 20px;
+        }
+        .row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
         }
         .highlight {
             border: 1px solid #ccc;
@@ -32,13 +37,11 @@
         .highlight img {
             width: 100%;
             height: auto;
-            cursor: pointer;
         }
         .highlight h2 {
             margin: 10px 0;
             font-size: 18px;
             color: #333;
-            cursor: pointer;
         }
         .highlight a {
             text-decoration: none;
@@ -46,6 +49,10 @@
         }
         .highlight a:hover h2 {
             color: #007bff;
+        }
+        .ad {
+            text-align: center;
+            margin: 20px 0;
         }
     </style>
 </head>
@@ -55,5 +62,8 @@
 
     <!-- Link to JavaScript file -->
     <script src="highlights.js"></script>
+
+    <!-- Google Ads Script -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 </body>
 </html>
