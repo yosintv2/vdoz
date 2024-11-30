@@ -25,9 +25,6 @@
             border: 1px solid #ccc;
             border-radius: 8px;
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
             text-align: center;
             background-color: #f9f9f9;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -35,15 +32,20 @@
         .highlight img {
             width: 100%;
             height: auto;
+            cursor: pointer;
         }
         .highlight h2 {
             margin: 10px 0;
             font-size: 18px;
             color: #333;
+            cursor: pointer;
         }
-        iframe {
-            width: 100%;
-            height: 200px;
+        .highlight a {
+            text-decoration: none;
+            color: inherit;
+        }
+        .highlight a:hover h2 {
+            color: #007bff;
         }
     </style>
 </head>
@@ -51,83 +53,7 @@
     <h1>Match Highlights</h1>
     <div id="highlightsContainer"></div>
 
-    <script>
-// Function to convert video URLs into embeddable or direct formats
-function getVideoUrl(url) {
-    try {
-        const urlObj = new URL(url);
-
-        // Handle YouTube
-        if (urlObj.hostname.includes('youtube.com') || urlObj.hostname.includes('youtu.be')) {
-            const videoId = urlObj.searchParams.get('v') || urlObj.pathname.split('/')[1];
-            return `https://www.youtube.com/watch?v=${videoId}`;
-        }
-
-        // Handle Vimeo
-        if (urlObj.hostname.includes('vimeo.com')) {
-            const videoId = urlObj.pathname.split('/')[1];
-            return `https://vimeo.com/${videoId}`;
-        }
-
-        // Handle Dailymotion
-        if (urlObj.hostname.includes('dailymotion.com')) {
-            const videoId = urlObj.pathname.split('/')[2];
-            return `https://www.dailymotion.com/video/${videoId}`;
-        }
-
-        // Handle Custom Player URLs (e.g., yosintv2.github.io player)
-        if (urlObj.hostname.includes('yosintv2.github.io') && urlObj.pathname.includes('plyrr.html')) {
-            return url; // Use the custom player URL as-is
-        }
-
-        // Default case: Return the original URL
-        return url;
-    } catch (error) {
-        console.error('Invalid video URL:', url);
-        return '';
-    }
-}
-
-// Function to display highlights dynamically on the page
-function displayHighlights(highlights) {
-    const container = document.getElementById('highlightsContainer');
-    highlights.forEach(highlight => {
-        const videoUrl = getVideoUrl(highlight.video); // Get direct video URL
-        if (videoUrl) {
-            const div = document.createElement('div');
-            div.className = 'highlight';
-            div.innerHTML = `
-                <a href="${videoUrl}" target="_blank">
-                    <img src="${highlight.image}" alt="${highlight.matchTitle}">
-                </a>
-                <a href="${videoUrl}" target="_blank">
-                    <h2>${highlight.matchTitle}</h2>
-                </a>
-            `;
-            container.appendChild(div);
-        } else {
-            console.warn('Skipping highlight with invalid video URL:', highlight);
-        }
-    });
-}
-
-// Function to fetch and display JSON data
-function loadHighlights(jsonPath) {
-    fetch(jsonPath)
-        .then(response => response.json())
-        .then(data => {
-            displayHighlights(data.highlights);
-        })
-        .catch(error => console.error('Error loading JSON:', error));
-}
-
-// Initialize the highlights by providing the JSON file path
-document.addEventListener('DOMContentLoaded', () => {
-    loadHighlights('highlights.json'); // Update the path if the JSON file is in another location
-});
-
-    </script>
-
-    
+    <!-- Link to JavaScript file -->
+    <script src="highlights.js"></script>
 </body>
 </html>
