@@ -52,27 +52,27 @@
     <div id="highlightsContainer"></div>
 
     <script>
-// Function to convert video URLs into embeddable formats
-function getEmbedUrl(url) {
+// Function to convert video URLs into embeddable or direct formats
+function getVideoUrl(url) {
     try {
         const urlObj = new URL(url);
 
         // Handle YouTube
         if (urlObj.hostname.includes('youtube.com') || urlObj.hostname.includes('youtu.be')) {
             const videoId = urlObj.searchParams.get('v') || urlObj.pathname.split('/')[1];
-            return `https://www.youtube.com/embed/${videoId}`;
+            return `https://www.youtube.com/watch?v=${videoId}`;
         }
 
         // Handle Vimeo
         if (urlObj.hostname.includes('vimeo.com')) {
             const videoId = urlObj.pathname.split('/')[1];
-            return `https://player.vimeo.com/video/${videoId}`;
+            return `https://vimeo.com/${videoId}`;
         }
 
         // Handle Dailymotion
         if (urlObj.hostname.includes('dailymotion.com')) {
             const videoId = urlObj.pathname.split('/')[2];
-            return `https://www.dailymotion.com/embed/video/${videoId}`;
+            return `https://www.dailymotion.com/video/${videoId}`;
         }
 
         // Handle Custom Player URLs (e.g., yosintv2.github.io player)
@@ -80,7 +80,7 @@ function getEmbedUrl(url) {
             return url; // Use the custom player URL as-is
         }
 
-        // Default case: Use the URL as-is if it's already embeddable
+        // Default case: Return the original URL
         return url;
     } catch (error) {
         console.error('Invalid video URL:', url);
@@ -92,14 +92,17 @@ function getEmbedUrl(url) {
 function displayHighlights(highlights) {
     const container = document.getElementById('highlightsContainer');
     highlights.forEach(highlight => {
-        const embedUrl = getEmbedUrl(highlight.video); // Convert video URL to embeddable URL
-        if (embedUrl) {
+        const videoUrl = getVideoUrl(highlight.video); // Get direct video URL
+        if (videoUrl) {
             const div = document.createElement('div');
             div.className = 'highlight';
             div.innerHTML = `
-                <img src="${highlight.image}" alt="${highlight.matchTitle}">
-                <h2>${highlight.matchTitle}</h2>
-                <iframe src="${embedUrl}" frameborder="0" allowfullscreen></iframe>
+                <a href="${videoUrl}" target="_blank">
+                    <img src="${highlight.image}" alt="${highlight.matchTitle}">
+                </a>
+                <a href="${videoUrl}" target="_blank">
+                    <h2>${highlight.matchTitle}</h2>
+                </a>
             `;
             container.appendChild(div);
         } else {
@@ -122,6 +125,7 @@ function loadHighlights(jsonPath) {
 document.addEventListener('DOMContentLoaded', () => {
     loadHighlights('highlights.json'); // Update the path if the JSON file is in another location
 });
+
     </script>
 
     
