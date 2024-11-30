@@ -4,21 +4,21 @@
             "league": "Premier League",
             "sport": "Football",
             "matchTitle": "Manchester United vs Liverpool",
-            "image": "manu-vs-liverpool.jpg",
+            "image": "https://img.youtube.com/vi/dBUxfFoQpuo/maxresdefault.jpg",
             "video": "https://www.youtube.com/embed/Jk10PSnPnLk"
         },
         {
             "league": "La Liga",
             "sport": "Football",
             "matchTitle": "Barcelona vs Real Madrid",
-            "image": "barca-vs-real.jpg",
+            "image": "https://img.youtube.com/vi/dBUxfFoQpuo/maxresdefault.jpg",
             "video": "https://www.youtube.com/embed/Jk10PSnPnLk"
         },
         {
             "league": "IPL",
             "sport": "Cricket",
             "matchTitle": "Mumbai Indians vs Chennai Super Kings",
-            "image": "mi-vs-csk.jpg",
+            "image": "https://img.youtube.com/vi/dBUxfFoQpuo/maxresdefault.jpg",
             "video": "https://www.youtube.com/embed/Jk10PSnPnLk"
         }
     ]
